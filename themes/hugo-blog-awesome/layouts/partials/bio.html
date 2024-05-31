@@ -1,0 +1,32 @@
+{{ $avatar_img := .Site.Params.author.avatar }} {{ $avatar_img_alt :=
+.Site.Params.author.name }} {{ $image := resources.Get $avatar_img }}
+<div class="author">
+  {{ with $image }} {{ $image := $image.Fill "100x100 webp" }}
+  <img
+    class="author-avatar"
+    src="{{ $image.RelPermalink }}"
+    alt="{{ $avatar_img_alt }}"
+    width="{{ .Width }}"
+    height="{{ .Height }}"
+  />
+  {{ end }}
+  <div>&nbsp;</div>
+  <div class="footer_social-icons">
+    {{- partial "socialIcons.html" site.Params.socialIcons -}}
+  </div>
+  <h2 class="author-name">{{ .Site.Params.author.intro }}</h2>
+  <p style="max-width: 95%; text-align: center" class="author-bio">
+    {{ .Site.Params.author.description }}<br />
+    Currently work as a Software Engineer and Tech Lead @<a
+      href="https://itau.com.br"
+      style="font-weight: lighter"
+      >Itaú Unibanco</a
+    >. <br /><br />
+    Here's my
+    <a
+      href="https://dr5hn.github.io/coming-soon/"
+      style="font-weight: lighter"
+      >resume</a
+    >.
+  </p>
+</div>
