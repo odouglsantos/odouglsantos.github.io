@@ -18,6 +18,8 @@ enableEmoji = true
   [markup.goldmark.renderer]
     unsafe = true
 
+
+
 [menu]
   [[menu.main]] 
     # The page reference (pageRef) is useful for menu highlighting
@@ -63,4 +65,4 @@ enableEmoji = true
 
 [[params.socialIcons]]
   name = "email"
-  url = "mailto:empty@gmail.com"
+  url = "mailto:douglas.san5@gmail.com"
