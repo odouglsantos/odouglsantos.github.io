@@ -1,1 +1,4 @@
 public
+.idea
+.hugo_build.lock
+package-lock.json
