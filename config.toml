@@ -47,10 +47,10 @@ enableEmoji = true
 [params]
   sitename = "Douglas Santos"
   defaultColor = "dark" # set default color mode: dark or light
-  description = "Welcome to my personal blog"
+  description = "Welcome to my personal tech blog"
 
 [params.author]
-  avatar = "avatar.jpg" # put the file in assets folder; also ensure that image has same height and width
+  avatar = "avatar.webp" # put the file in assets folder; also ensure that image has same height and width
   # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
   intro = "Douglas Santos (aka Batman)"
   name = "Douglas Santos"
@@ -65,4 +65,4 @@ enableEmoji = true
 
 [[params.socialIcons]]
   name = "email"
-  url = "mailto:douglas.san5@gmail.com"
+  url = "mailto:douglas@batcode.io"

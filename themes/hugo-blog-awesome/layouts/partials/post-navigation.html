@@ -1,0 +1,33 @@
+{{ $currentPage := . }}
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $currentIndex := -1 }}
+
+{{ range $index, $post := $posts }}
+    {{ if eq $post.RelPermalink $currentPage.RelPermalink }}
+        {{ $currentIndex = $index }}
+    {{ end }}
+{{ end }}
+
+{{ if gt $currentIndex -1 }}
+    <footer class="post-navigation">
+        <div class="post-navigation-container">
+            <div class="post-navigation-prev">
+                {{ if gt $currentIndex 0 }}
+                    {{ $prevPost := index $posts (sub $currentIndex 1) }}
+                    <a href="{{ $prevPost.RelPermalink }}" class="post-navigation-link" title="{{ $prevPost.Title }}">
+                        ← Post Anterior
+                    </a>
+                {{ end }}
+            </div>
+
+            <div class="post-navigation-next">
+                {{ if lt $currentIndex (sub (len $posts) 1) }}
+                    {{ $nextPost := index $posts (add $currentIndex 1) }}
+                    <a href="{{ $nextPost.RelPermalink }}" class="post-navigation-link" title="{{ $nextPost.Title }}">
+                        Próximo Post →
+                    </a>
+                {{ end }}
+            </div>
+        </div>
+    </footer>
+{{ end }} 

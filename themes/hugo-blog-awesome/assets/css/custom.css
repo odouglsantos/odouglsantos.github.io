@@ -1,0 +1,82 @@
+.post-navigation {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.post-navigation-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.post-navigation-prev,
+.post-navigation-next {
+    flex: 1;
+    min-width: 0;
+}
+
+.post-navigation-prev {
+    text-align: left;
+    order: 1;
+}
+
+.post-navigation-next {
+    text-align: right;
+    order: 2;
+}
+
+.post-navigation-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 0.5rem;
+}
+
+.post-navigation-link {
+    color: var(--primary-text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.post-navigation-link:hover {
+    color: var(--primary-color);
+    background-color: var(--secondary-bg-color);
+}
+
+/* Estilo do tooltip */
+.post-navigation-link[title] {
+    position: relative;
+}
+
+.post-navigation-link[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem;
+    background-color: var(--secondary-bg-color);
+    color: var(--primary-text-color);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .post-navigation-container {
+        flex-direction: column;
+    }
+
+    .post-navigation-next {
+        text-align: left;
+    }
+} 
