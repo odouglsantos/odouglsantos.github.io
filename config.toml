@@ -42,25 +42,15 @@ enableEmoji = true
         content = "Douglas Santos (aka Batman) — engenheiro de software, gamer e aspirante a criptógrafo."
 
     [[languages.pt.menus.main]]
-      pageRef = "/"
-      name = 'Início'
-      url = '/'
+      pageRef = "about"
+      name = 'Sobre'
+      url = '/about/'
       weight = 10
-    [[languages.pt.menus.main]]
-      pageRef = "posts"
-      name = 'Posts'
-      url = '/posts/'
-      weight = 20
     [[languages.pt.menus.main]]
       identifier = "archives"
       name = 'Arquivo'
       url = '/archives/'
-      weight = 30
-    [[languages.pt.menus.main]]
-      identifier = "tags"
-      name = 'Tags'
-      url = '/tags/'
-      weight = 40
+      weight = 20
 
   [languages.en]
     label = 'English'
@@ -75,25 +65,15 @@ enableEmoji = true
         content = "Douglas Santos (aka Batman) — software engineer, gamer and cryptography aspirant."
 
     [[languages.en.menus.main]]
-      pageRef = "/"
-      name = 'Home'
-      url = '/'
+      pageRef = "about"
+      name = 'About'
+      url = '/about/'
       weight = 10
-    [[languages.en.menus.main]]
-      pageRef = "posts"
-      name = 'Posts'
-      url = '/posts/'
-      weight = 20
     [[languages.en.menus.main]]
       identifier = "archives"
       name = 'Archives'
       url = '/archives/'
-      weight = 30
-    [[languages.en.menus.main]]
-      identifier = "tags"
-      name = 'Tags'
-      url = '/tags/'
-      weight = 40
+      weight = 20
 
 # ------------------------------------------------------- params comuns
 

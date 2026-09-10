@@ -8,17 +8,6 @@
     gap: 16px;
 }
 
-/* A barra é mais larga que a coluna de conteúdo: o grupo da direita encosta
-   perto da borda da janela, como na referência, enquanto o título continua
-   alinhado com o conteúdo abaixo. */
-@media (min-width: 1000px) {
-    .header .nav {
-        max-width: none;
-        padding-inline-start: max(0px, calc((100% - var(--nav-width) - var(--gap) * 2) / 2));
-        padding-inline-end: 16px;
-    }
-}
-
 .sg-nav-end {
     display: flex;
     align-items: center;
