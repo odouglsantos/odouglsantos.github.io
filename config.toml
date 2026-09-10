@@ -1,15 +1,19 @@
 title = "Douglas Santos"
 baseURL = 'https://odouglsantos.github.io'
-languageCode = 'en-us'
-theme = "hugo-blog-awesome"
+locale = 'en-us'
+defaultContentLanguage = 'en'
+theme = "hugo-theme-sigil"
 
 # To enable Google Analytics 4 (gtag.js) provide G-MEASUREMENT_ID below.
 # To disable  Google Analytics, simply leave the field empty or remove the next line
 googleAnalytics = '' # G-MEASUREMENT_ID
 
-
 # Enable emojis globally
 enableEmoji = true
+
+# JSON output feeds the theme's on-the-fly (Fuse.js) search page
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 # set markup.highlight.noClasses=false to enable code highlight
 [markup]
@@ -18,51 +22,63 @@ enableEmoji = true
   [markup.goldmark.renderer]
     unsafe = true
 
-
-
 [menu]
-  [[menu.main]] 
+  [[menu.main]]
     # The page reference (pageRef) is useful for menu highlighting
     # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
     pageRef="/"
     name = 'Home'
     url = '/'
     weight = 10
-  # [[menu.main]]
-  #   pageRef="posts"
-  #   name = 'Posts'
-  #   url = '/posts/'
-  #   weight = 20
-  # [[menu.main]]
-  #   pageRef="about"
-  #   name = 'About'
-  #   url = '/about/'
-  #   weight = 30
   [[menu.main]]
     pageRef="posts"
     name = 'Posts'
     url = '/posts/'
     weight = 20
+  [[menu.main]]
+    identifier = "archives"
+    name = 'Archives'
+    url = '/archives/'
+    weight = 30
+  [[menu.main]]
+    identifier = "tags"
+    name = 'Tags'
+    url = '/tags/'
+    weight = 40
+  # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
 
 [params]
+  mainSections = ["posts"]
   sitename = "Douglas Santos"
-  defaultColor = "dark" # set default color mode: dark or light
+  author = "Douglas Santos"
   description = "Welcome to my personal tech blog"
+  defaultTheme = "dark" # light / dark / auto
 
-[params.author]
-  avatar = "avatar.webp" # put the file in assets folder; also ensure that image has same height and width
-  # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
-  intro = "Douglas Santos (aka Batman)"
-  name = "Douglas Santos"
-  description = "Software engineer, gamer and cryptography aspirant"
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/odouglsantos"
+  # Sigil homepage hero
+  sgKicker = "Software engineer, gamer and cryptography aspirant"
+  sgSealImage = "avatar.webp" # file lives in static/
 
-[[params.socialIcons]]
-  name = "linkedin"
-  url = "http://www.linkedin.com/in/odouglsantos/"
+  # Post chrome (PaperMod-inherited params)
+  ShowBreadCrumbs = true
+  ShowReadingTime = true
+  ShowWordCount = true
+  ShowToc = true
+  TocOpen = false
+  ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
+  ShowFullTextinRSS = true
 
-[[params.socialIcons]]
-  name = "email"
-  url = "mailto:douglas@batcode.io"
+  [params.homeInfoParams]
+    content = "Douglas Santos (aka Batman) — software engineer, gamer and cryptography aspirant."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/odouglsantos"
+
+  [[params.socialIcons]]
+    name = "linkedin"
+    url = "http://www.linkedin.com/in/odouglsantos/"
+
+  [[params.socialIcons]]
+    name = "email"
+    url = "mailto:douglas@batcode.io"
