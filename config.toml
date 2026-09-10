@@ -88,6 +88,19 @@ enableEmoji = true
   # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
   sgSealImage = "avatar.webp" # arquivo em static/
 
+  # Post chrome (params herdados do PaperMod)
+  ShowBreadCrumbs = true
+  ShowReadingTime = true
+  ShowWordCount = true
+  ShowToc = true
+  TocOpen = false
+  ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
+  ShowFullTextinRSS = true
+
+  # Comentários via giscus (GitHub Discussions) — ver layouts/partials/comments.html
+  comments = true
+
   # Texto do logo na barra superior. O title do site segue "Douglas Santos"
   # para a aba do navegador, o RSS e os metadados.
   [params.label]
@@ -107,16 +120,6 @@ enableEmoji = true
     minMatchCharLength = 3
     limit = 12
     keys = ["title", "summary", "content"]
-
-  # Post chrome (params herdados do PaperMod)
-  ShowBreadCrumbs = true
-  ShowReadingTime = true
-  ShowWordCount = true
-  ShowToc = true
-  TocOpen = false
-  ShowCodeCopyButtons = true
-  ShowPostNavLinks = true
-  ShowFullTextinRSS = true
 
   [[params.socialIcons]]
     name = "github"
