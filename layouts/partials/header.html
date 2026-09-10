@@ -12,6 +12,10 @@
   {{- if eq (lower .name) "github" }}{{ $gh = .url }}{{ end }}
 {{- end }}
 {{- $rss := site.Home.OutputFormats.Get "rss" }}
+{{- /* O seletor de idioma aponta para a tradução da página atual quando ela
+       existe; senão, cai na home do outro idioma. */ -}}
+{{- $langAlts := .Translations }}
+{{- if not $langAlts }}{{ $langAlts = site.Home.Translations }}{{ end }}
 
 <header class="header">
     <nav class="nav">
@@ -109,7 +113,7 @@
 
             <div class="logo-switches">
                 {{- if (not site.Params.disableLangToggle) }}
-                    {{- with site.Home.Translations }}
+                    {{- with $langAlts }}
                     <ul class="lang-switch" aria-label="Language switcher">
                         <li>
                             <span class="is-current" aria-current="true">

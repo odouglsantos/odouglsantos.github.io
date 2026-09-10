@@ -1,8 +1,11 @@
 title = "Douglas Santos"
 baseURL = 'https://odouglsantos.github.io'
-locale = 'en-us'
-defaultContentLanguage = 'en'
 theme = "hugo-theme-sigil"
+
+# Bilíngue: o português é o idioma padrão e continua servido na raiz do site,
+# então nenhuma URL publicada antes desta mudança se move. O inglês fica em /en/.
+defaultContentLanguage = 'pt'
+defaultContentLanguageInSubdir = false
 
 # To enable Google Analytics 4 (gtag.js) provide G-MEASUREMENT_ID below.
 # To disable  Google Analytics, simply leave the field empty or remove the next line
@@ -22,43 +25,88 @@ enableEmoji = true
   [markup.goldmark.renderer]
     unsafe = true
 
-[menu]
-  [[menu.main]]
-    # The page reference (pageRef) is useful for menu highlighting
-    # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
-    pageRef="/"
-    name = 'Home'
-    url = '/'
-    weight = 10
-  [[menu.main]]
-    pageRef="posts"
-    name = 'Posts'
-    url = '/posts/'
-    weight = 20
-  [[menu.main]]
-    identifier = "archives"
-    name = 'Archives'
-    url = '/archives/'
-    weight = 30
-  [[menu.main]]
-    identifier = "tags"
-    name = 'Tags'
-    url = '/tags/'
-    weight = 40
-  # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
+# ---------------------------------------------------------------- idiomas
+
+[languages]
+
+  [languages.pt]
+    label = 'Português'
+    locale = 'pt-BR'
+    weight = 1
+    title = "Douglas Santos"
+
+    [languages.pt.params]
+      description = "Bem-vindo ao meu blog pessoal de tecnologia"
+      sgKicker = "Engenheiro de software, gamer e aspirante a criptógrafo"
+      [languages.pt.params.homeInfoParams]
+        content = "Douglas Santos (aka Batman) — engenheiro de software, gamer e aspirante a criptógrafo."
+
+    [[languages.pt.menus.main]]
+      pageRef = "/"
+      name = 'Início'
+      url = '/'
+      weight = 10
+    [[languages.pt.menus.main]]
+      pageRef = "posts"
+      name = 'Posts'
+      url = '/posts/'
+      weight = 20
+    [[languages.pt.menus.main]]
+      identifier = "archives"
+      name = 'Arquivo'
+      url = '/archives/'
+      weight = 30
+    [[languages.pt.menus.main]]
+      identifier = "tags"
+      name = 'Tags'
+      url = '/tags/'
+      weight = 40
+
+  [languages.en]
+    label = 'English'
+    locale = 'en-US'
+    weight = 2
+    title = "Douglas Santos"
+
+    [languages.en.params]
+      description = "Welcome to my personal tech blog"
+      sgKicker = "Software engineer, gamer and cryptography aspirant"
+      [languages.en.params.homeInfoParams]
+        content = "Douglas Santos (aka Batman) — software engineer, gamer and cryptography aspirant."
+
+    [[languages.en.menus.main]]
+      pageRef = "/"
+      name = 'Home'
+      url = '/'
+      weight = 10
+    [[languages.en.menus.main]]
+      pageRef = "posts"
+      name = 'Posts'
+      url = '/posts/'
+      weight = 20
+    [[languages.en.menus.main]]
+      identifier = "archives"
+      name = 'Archives'
+      url = '/archives/'
+      weight = 30
+    [[languages.en.menus.main]]
+      identifier = "tags"
+      name = 'Tags'
+      url = '/tags/'
+      weight = 40
+
+# ------------------------------------------------------- params comuns
 
 [params]
   mainSections = ["posts"]
   sitename = "Douglas Santos"
   author = "Douglas Santos"
-  description = "Welcome to my personal tech blog"
   defaultTheme = "dark" # light / dark / auto
 
-  # Sigil homepage hero
-  sgKicker = "Software engineer, gamer and cryptography aspirant"
-  sgSealImage = "avatar.webp" # file lives in static/
+  # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
+  sgSealImage = "avatar.webp" # arquivo em static/
 
-  # Post chrome (PaperMod-inherited params)
+  # Post chrome (params herdados do PaperMod)
   ShowBreadCrumbs = true
   ShowReadingTime = true
   ShowWordCount = true
@@ -67,9 +115,6 @@ enableEmoji = true
   ShowCodeCopyButtons = true
   ShowPostNavLinks = true
   ShowFullTextinRSS = true
-
-  [params.homeInfoParams]
-    content = "Douglas Santos (aka Batman) — software engineer, gamer and cryptography aspirant."
 
   [[params.socialIcons]]
     name = "github"

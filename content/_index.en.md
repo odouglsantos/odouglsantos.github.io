@@ -1,4 +1,4 @@
 ---
-title: "Início"
+title: "Home"
 author : "Douglas Santos"
 ---

@@ -1,6 +1,7 @@
 ---
-title: "Search"
+title: "Buscar"
 layout: "search"
 summary: "search"
-placeholder: "Type keywords…"
+placeholder: "Digite e tecle ↵"
+navPlaceholder: "Buscar no site…"
 ---
