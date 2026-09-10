@@ -1,4 +1,4 @@
-title = "Douglas Santos"
+title = "batcode.io"
 baseURL = 'https://odouglsantos.github.io'
 theme = "hugo-theme-sigil"
 
@@ -85,6 +85,11 @@ enableEmoji = true
 
   # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
   sgSealImage = "avatar.webp" # arquivo em static/
+
+  # Texto do logo na barra superior. O title do site segue "Douglas Santos"
+  # para a aba do navegador, o RSS e os metadados.
+  [params.label]
+    text = "batcode.io"
 
   # Busca (Fuse.js, client-side sobre /index.json).
   # O padrão do tema é threshold 0.4 sobre o conteúdo inteiro: com textos
