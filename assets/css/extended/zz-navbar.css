@@ -33,9 +33,12 @@
     gap: 12px;
 }
 
-/* ícones (GitHub, RSS) */
-.sg-nav-icon {
-    display: inline-grid;
+/* Ícones (GitHub, RSS).
+   O seletor precisa do .sg-nav-end na frente: o header.css do tema tem
+   `.nav a { display: block }`, que é mais específico que uma classe sozinha e
+   estava anulando o place-items — os ícones subiam ~6px acima da linha. */
+.sg-nav-end .sg-nav-icon {
+    display: grid;
     place-items: center;
     width: 32px;
     height: 32px;
@@ -44,8 +47,13 @@
     transition: color 180ms ease, background 180ms ease;
 }
 
-.sg-nav-icon:hover,
-.sg-nav-icon:focus-visible {
+/* svg inline vira caixa de bloco: sem isso a baseline deixa uma folga embaixo */
+.sg-nav-end .sg-nav-icon svg {
+    display: block;
+}
+
+.sg-nav-end .sg-nav-icon:hover,
+.sg-nav-end .sg-nav-icon:focus-visible {
     color: var(--primary);
     background: var(--sg-surface, var(--code-bg));
 }
@@ -58,11 +66,12 @@
     width: clamp(200px, 24vw, 300px);
     padding: 0 12px;
     height: 34px;
+    line-height: 1;
     color: var(--tertiary);
     /* fica legível como campo nos dois temas, sem depender do tom exato do fundo */
     background: color-mix(in oklab, var(--primary) 6%, transparent);
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: 8px;
     transition: border-color 180ms ease, background 180ms ease;
 }
 
@@ -105,6 +114,7 @@
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.04em;
+    text-transform: uppercase;
     line-height: 1;
     background: var(--theme);
     border: 1px solid var(--border);
@@ -133,10 +143,34 @@
     margin: 0;
 }
 
-.sg-nav-end button#theme-toggle {
+/* PT EN lado a lado, sem a barra "/" e sem o sublinhado do tema */
+.sg-nav-end .lang-switch {
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+}
+
+.sg-nav-end .lang-switch li + li::before {
+    content: none;
+}
+
+.sg-nav-end .lang-switch .is-current::after {
+    display: none;
+}
+
+/* botão de tema sem o anel: na barra do Akita o sol é só o ícone */
+.sg-nav-end .logo-switches button#theme-toggle {
     width: 32px;
     height: 32px;
     margin: 0;
+    color: var(--secondary);
+    border: 0;
+    border-radius: 0;
+    transition: color 180ms ease;
+}
+
+.sg-nav-end .logo-switches button#theme-toggle:hover {
+    color: var(--primary);
 }
 
 /* ---------------------------- responsivo ---------------------------- */
@@ -191,15 +225,17 @@
         margin-inline-start: 16px;
     }
 
+    /* base pequena de propósito: o tamanho intrínseco do <input> empurraria
+       idioma e tema para uma terceira linha */
     .sg-nav-tools {
-        flex: 1 1 auto;
+        flex: 1 1 170px;
         min-width: 0;
         order: 1;
         gap: 8px;
     }
 
     .sg-navsearch {
-        flex: 1 1 auto;
+        flex: 1 1 110px;
         width: auto;
         min-width: 0;
     }
