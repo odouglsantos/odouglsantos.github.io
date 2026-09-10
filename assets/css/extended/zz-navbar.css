@@ -8,12 +8,29 @@
     gap: 16px;
 }
 
+/* A barra é mais larga que a coluna de conteúdo: o grupo da direita encosta
+   perto da borda da janela, como na referência, enquanto o título continua
+   alinhado com o conteúdo abaixo. */
+@media (min-width: 1000px) {
+    .header .nav {
+        max-width: none;
+        padding-inline-start: max(0px, calc((100% - var(--nav-width) - var(--gap) * 2) / 2));
+        padding-inline-end: 16px;
+    }
+}
+
 .sg-nav-end {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
     margin: auto var(--gap);
     line-height: 1;
+}
+
+/* o respiro depois de "Tags" vem daqui, não do gap da linha: assim feed,
+   idioma e tema ficam juntos no fim */
+.sg-nav-end #menu {
+    margin-inline-end: 10px;
 }
 
 /* o menu de texto vira só mais um item da linha */
@@ -67,10 +84,11 @@
     padding: 0 12px;
     height: 34px;
     line-height: 1;
-    color: var(--tertiary);
-    /* fica legível como campo nos dois temas, sem depender do tom exato do fundo */
+    color: var(--secondary);
+    /* fica legível como campo nos dois temas, sem depender do tom exato do fundo.
+       A borda do tema (--border) some no escuro; usar o mesmo tom do texto. */
     background: color-mix(in oklab, var(--primary) 6%, transparent);
-    border: 1px solid var(--border);
+    border: 1px solid color-mix(in oklab, var(--secondary) 55%, transparent);
     border-radius: 8px;
     transition: border-color 180ms ease, background 180ms ease;
 }
@@ -78,6 +96,13 @@
 .sg-navsearch:focus-within {
     background: var(--theme);
     border-color: var(--sg-red);
+}
+
+/* placeholder e tecla de atalho no mesmo tom do menu, não no --tertiary
+   (que no tema escuro é quase a cor do fundo) */
+.sg-navsearch input::placeholder {
+    color: var(--secondary);
+    opacity: 1;
 }
 
 .sg-navsearch svg {
@@ -97,10 +122,6 @@
     appearance: none;
 }
 
-.sg-navsearch input::placeholder {
-    color: var(--tertiary);
-}
-
 /* Chrome/Safari: some o "x" nativo, que briga com o pill */
 .sg-navsearch input::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -109,7 +130,7 @@
 .sg-navsearch kbd {
     flex: none;
     padding: 3px 6px;
-    color: var(--tertiary);
+    color: var(--secondary);
     font-family: var(--sg-sans);
     font-size: 10px;
     font-weight: 600;
@@ -117,7 +138,7 @@
     text-transform: uppercase;
     line-height: 1;
     background: var(--theme);
-    border: 1px solid var(--border);
+    border: 1px solid color-mix(in oklab, var(--secondary) 45%, transparent);
     border-radius: 4px;
 }
 
@@ -139,19 +160,23 @@
 
 /* idioma + tema ficam colados no fim da linha */
 .sg-nav-end .logo-switches {
-    gap: 14px;
+    gap: 10px;
     margin: 0;
 }
 
 /* PT EN lado a lado, sem a barra "/" e sem o sublinhado do tema */
 .sg-nav-end .lang-switch {
     align-items: center;
-    gap: 9px;
-    font-size: 13px;
+    gap: 7px;
+    /* na altura dos ícones do feed e do tema, que têm 20-22px */
+    font-size: 16px;
 }
 
+/* separador em pipe: PT | EN */
 .sg-nav-end .lang-switch li + li::before {
-    content: none;
+    margin-inline-end: 7px;
+    color: color-mix(in oklab, var(--secondary) 60%, transparent);
+    content: "|";
 }
 
 .sg-nav-end .lang-switch .is-current::after {

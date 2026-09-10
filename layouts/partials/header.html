@@ -13,8 +13,11 @@
 {{- end }}
 {{- $rss := site.Home.OutputFormats.Get "rss" }}
 {{- /* O seletor de idioma aponta para a tradução da página atual quando ela
-       existe; senão, cai na home do outro idioma. */ -}}
+       existe; senão, para a mesma seção no outro idioma (de um post em
+       português sem tradução, vai para a lista de posts em inglês); e só
+       então cai na home. */ -}}
 {{- $langAlts := .Translations }}
+{{- if not $langAlts }}{{ with .CurrentSection }}{{ $langAlts = .Translations }}{{ end }}{{ end }}
 {{- if not $langAlts }}{{ $langAlts = site.Home.Translations }}{{ end }}
 
 <header class="header">
