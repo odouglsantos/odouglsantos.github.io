@@ -37,7 +37,8 @@ enableEmoji = true
 
     [languages.pt.params]
       description = "Bem-vindo ao meu blog pessoal de tecnologia"
-      sgKicker = "Douglas (a.k.a Batman) Santos"
+      sgHomeTitle = "Eu sou o Batman"
+      sgKicker = "Douglas Santos - Espec Eng de Software, gamer e aspirante a criptógrafo"
       [languages.pt.params.homeInfoParams]
         content = "Escrevo sobre sistemas distribuídos, Linux e as coisas que quebram no caminho."
 
@@ -60,7 +61,8 @@ enableEmoji = true
 
     [languages.en.params]
       description = "Welcome to my personal tech blog"
-      sgKicker = "Douglas (aka Batman) Santos"
+      sgHomeTitle = "I'm Batman"
+      sgKicker = "Douglas Santos - Software Engineering Specialist, gamer and cryptography aspirant"
       [languages.en.params.homeInfoParams]
         content = "I write about distributed systems, Linux and the things that break along the way."
 
