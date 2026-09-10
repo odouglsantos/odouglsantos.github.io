@@ -1,10 +1,10 @@
-title = "Douglas Santos"
+title = "batcode.io"
 baseURL = 'https://odouglsantos.github.io'
-theme = "hugo-blog-awesome"
+theme = "hugo-theme-sigil"
 
-# Multilingual: Portuguese is the default and stays at the site root, so every
-# URL published before this change keeps working. English is served under /en/.
-defaultContentLanguage = 'pt-br'
+# Bilíngue: o português é o idioma padrão e continua servido na raiz do site,
+# então nenhuma URL publicada antes desta mudança se move. O inglês fica em /en/.
+defaultContentLanguage = 'pt'
 defaultContentLanguageInSubdir = false
 
 # To enable Google Analytics 4 (gtag.js) provide G-MEASUREMENT_ID below.
@@ -14,6 +14,10 @@ googleAnalytics = '' # G-MEASUREMENT_ID
 # Enable emojis globally
 enableEmoji = true
 
+# JSON output feeds the theme's on-the-fly (Fuse.js) search page
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 # set markup.highlight.noClasses=false to enable code highlight
 [markup]
   [markup.highlight]
@@ -21,75 +25,110 @@ enableEmoji = true
   [markup.goldmark.renderer]
     unsafe = true
 
+# ---------------------------------------------------------------- idiomas
+
 [languages]
 
-  [languages.pt-br]
-    languageName = 'Português'
-    languageCode = 'pt-BR'
+  [languages.pt]
+    label = 'Português'
+    locale = 'pt-BR'
     weight = 1
     title = "Douglas Santos"
 
-    [languages.pt-br.params]
-      sitename = "Douglas Santos"
+    [languages.pt.params]
       description = "Bem-vindo ao meu blog pessoal de tecnologia"
+      sgHomeTitle = "Eu sou o Batman"
+      sgKicker = "Douglas Santos - Espec Eng de Software, gamer e aspirante a criptógrafo"
+      [languages.pt.params.homeInfoParams]
+        content = "Escrevo sobre sistemas distribuídos, Linux e as coisas que quebram no caminho."
 
-    [languages.pt-br.params.author]
-      avatar = "avatar.webp"
-      intro = "Douglas Santos (aka Batman)"
-      name = "Douglas Santos"
-      description = "Engenheiro de software, gamer e aspirante a criptógrafo"
-
-    [[languages.pt-br.menu.main]]
-      pageRef = "/"
-      name = 'Início'
-      url = '/'
+    [[languages.pt.menus.main]]
+      pageRef = "about"
+      name = 'Sobre'
+      url = '/about/'
       weight = 10
-
-    [[languages.pt-br.menu.main]]
-      pageRef = "posts"
-      name = 'Posts'
-      url = '/posts/'
+    [[languages.pt.menus.main]]
+      identifier = "archives"
+      name = 'Arquivo'
+      url = '/archives/'
       weight = 20
 
   [languages.en]
-    languageName = 'English'
-    languageCode = 'en-US'
+    label = 'English'
+    locale = 'en-US'
     weight = 2
     title = "Douglas Santos"
 
     [languages.en.params]
-      sitename = "Douglas Santos"
       description = "Welcome to my personal tech blog"
+      sgHomeTitle = "I'm Batman"
+      sgKicker = "Douglas Santos - Software Engineering Specialist, gamer and cryptography aspirant"
+      [languages.en.params.homeInfoParams]
+        content = "I write about distributed systems, Linux and the things that break along the way."
 
-    [languages.en.params.author]
-      avatar = "avatar.webp"
-      intro = "Douglas Santos (aka Batman)"
-      name = "Douglas Santos"
-      description = "Software engineer, gamer and cryptography aspirant"
-
-    [[languages.en.menu.main]]
-      pageRef = "/"
-      name = 'Home'
-      url = '/en/'
+    [[languages.en.menus.main]]
+      pageRef = "about"
+      name = 'About'
+      url = '/about/'
       weight = 10
-
-    [[languages.en.menu.main]]
-      pageRef = "posts"
-      name = 'Posts'
-      url = '/en/posts/'
+    [[languages.en.menus.main]]
+      identifier = "archives"
+      name = 'Archives'
+      url = '/archives/'
       weight = 20
 
+# ------------------------------------------------------- params comuns
+
 [params]
-  defaultColor = "dark" # set default color mode: dark or light
+  mainSections = ["posts"]
+  sitename = "Douglas Santos"
+  author = "Douglas Santos"
+  defaultTheme = "dark" # light / dark / auto
 
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/odouglsantos"
+  # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
+  sgSealImage = "avatar.webp" # arquivo em static/
 
-[[params.socialIcons]]
-  name = "linkedin"
-  url = "http://www.linkedin.com/in/odouglsantos/"
+  # Post chrome (params herdados do PaperMod)
+  ShowBreadCrumbs = true
+  ShowReadingTime = true
+  ShowWordCount = true
+  ShowToc = true
+  TocOpen = false
+  ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
+  ShowFullTextinRSS = true
 
-[[params.socialIcons]]
-  name = "email"
-  url = "mailto:douglas@batcode.io"
+  # Comentários via giscus (GitHub Discussions) — ver layouts/partials/comments.html
+  comments = true
+
+  # Texto do logo na barra superior. O title do site segue "Douglas Santos"
+  # para a aba do navegador, o RSS e os metadados.
+  [params.label]
+    text = "batcode.io"
+
+  # Busca (Fuse.js, client-side sobre /index.json).
+  # O padrão do tema é threshold 0.4 sobre o conteúdo inteiro: com textos
+  # longos, quase toda busca casa com todos os posts ("avro" trazia os três).
+  # threshold 0 = o termo tem de aparecer literalmente; ignoreLocation faz
+  # valer em qualquer ponto do texto, não só no começo.
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    ignoreLocation = true
+    threshold = 0.0
+    distance = 100
+    minMatchCharLength = 3
+    limit = 12
+    keys = ["title", "summary", "content"]
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/odouglsantos"
+
+  [[params.socialIcons]]
+    name = "linkedin"
+    url = "http://www.linkedin.com/in/odouglsantos/"
+
+  [[params.socialIcons]]
+    name = "email"
+    url = "mailto:douglas@batcode.io"

@@ -1,0 +1,262 @@
+/* ------------------------------------------------------------------
+   Barra superior (override do site, ver layouts/partials/header.html)
+   Distribuição: título · | · menu · GitHub · busca · feed · idioma · tema
+   ------------------------------------------------------------------ */
+
+.nav {
+    align-items: center;
+    gap: 16px;
+}
+
+.sg-nav-end {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: auto var(--gap);
+    line-height: 1;
+}
+
+/* o respiro depois de "Tags" vem daqui, não do gap da linha: assim feed,
+   idioma e tema ficam juntos no fim */
+.sg-nav-end #menu {
+    margin-inline-end: 10px;
+}
+
+/* o menu de texto vira só mais um item da linha */
+.sg-nav-end #menu {
+    margin: 0;
+    align-items: center;
+    line-height: 1;
+}
+
+.sg-nav-end #menu li + li {
+    margin-inline-start: 20px;
+}
+
+.sg-nav-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Ícones (GitHub, RSS).
+   O seletor precisa do .sg-nav-end na frente: o header.css do tema tem
+   `.nav a { display: block }`, que é mais específico que uma classe sozinha e
+   estava anulando o place-items — os ícones subiam ~6px acima da linha. */
+.sg-nav-end .sg-nav-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    color: var(--secondary);
+    border-radius: 50%;
+    transition: color 180ms ease, background 180ms ease;
+}
+
+/* svg inline vira caixa de bloco: sem isso a baseline deixa uma folga embaixo */
+.sg-nav-end .sg-nav-icon svg {
+    display: block;
+}
+
+.sg-nav-end .sg-nav-icon:hover,
+.sg-nav-end .sg-nav-icon:focus-visible {
+    color: var(--primary);
+    background: var(--sg-surface, var(--code-bg));
+}
+
+/* caixa de busca */
+.sg-navsearch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: clamp(200px, 24vw, 300px);
+    padding: 0 12px;
+    height: 34px;
+    line-height: 1;
+    color: var(--secondary);
+    /* fica legível como campo nos dois temas, sem depender do tom exato do fundo.
+       A borda do tema (--border) some no escuro; usar o mesmo tom do texto. */
+    background: color-mix(in oklab, var(--primary) 6%, transparent);
+    border: 1px solid color-mix(in oklab, var(--secondary) 55%, transparent);
+    border-radius: 8px;
+    transition: border-color 180ms ease, background 180ms ease;
+}
+
+.sg-navsearch:focus-within {
+    background: var(--theme);
+    border-color: var(--sg-red);
+}
+
+/* placeholder e tecla de atalho no mesmo tom do menu, não no --tertiary
+   (que no tema escuro é quase a cor do fundo) */
+.sg-navsearch input::placeholder {
+    color: var(--secondary);
+    opacity: 1;
+}
+
+.sg-navsearch svg {
+    flex: none;
+}
+
+.sg-navsearch input {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    color: var(--primary);
+    font-family: var(--sg-sans);
+    font-size: 13px;
+    background: transparent;
+    border: 0;
+    outline: none;
+    appearance: none;
+}
+
+/* Chrome/Safari: some o "x" nativo, que briga com o pill */
+.sg-navsearch input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+.sg-navsearch kbd {
+    flex: none;
+    padding: 3px 6px;
+    color: var(--secondary);
+    font-family: var(--sg-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    background: var(--theme);
+    border: 1px solid color-mix(in oklab, var(--secondary) 45%, transparent);
+    border-radius: 4px;
+}
+
+.sg-navsearch:focus-within kbd {
+    opacity: 0;
+}
+
+.sg-navsearch .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* idioma + tema ficam colados no fim da linha */
+.sg-nav-end .logo-switches {
+    gap: 10px;
+    margin: 0;
+}
+
+/* PT EN lado a lado, sem a barra "/" e sem o sublinhado do tema */
+.sg-nav-end .lang-switch {
+    align-items: center;
+    gap: 7px;
+    /* na altura dos ícones do feed e do tema, que têm 20-22px */
+    font-size: 16px;
+}
+
+/* separador em pipe: PT | EN */
+.sg-nav-end .lang-switch li + li::before {
+    margin-inline-end: 7px;
+    color: color-mix(in oklab, var(--secondary) 60%, transparent);
+    content: "|";
+}
+
+.sg-nav-end .lang-switch .is-current::after {
+    display: none;
+}
+
+/* botão de tema sem o anel: na barra do Akita o sol é só o ícone */
+.sg-nav-end .logo-switches button#theme-toggle {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    color: var(--secondary);
+    border: 0;
+    border-radius: 0;
+    transition: color 180ms ease;
+}
+
+.sg-nav-end .logo-switches button#theme-toggle:hover {
+    color: var(--primary);
+}
+
+/* ---------------------------- responsivo ---------------------------- */
+
+@media (max-width: 1100px) {
+    .sg-nav-end {
+        gap: 14px;
+    }
+
+    .sg-navsearch kbd {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .nav {
+        flex-wrap: wrap;
+        row-gap: 10px;
+        padding-block: 10px;
+    }
+
+    .sg-nav-end {
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-inline: var(--gap);
+    }
+
+    .sg-navsearch {
+        width: clamp(160px, 40vw, 240px);
+    }
+}
+
+@media (max-width: 620px) {
+    .nav {
+        justify-content: center;
+    }
+
+    /* duas linhas: menu em cima; GitHub · busca · feed · tema embaixo */
+    .sg-nav-end {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .sg-nav-end #menu {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .sg-nav-end #menu li + li {
+        margin-inline-start: 16px;
+    }
+
+    /* base pequena de propósito: o tamanho intrínseco do <input> empurraria
+       idioma e tema para uma terceira linha */
+    .sg-nav-tools {
+        flex: 1 1 170px;
+        min-width: 0;
+        order: 1;
+        gap: 8px;
+    }
+
+    .sg-navsearch {
+        flex: 1 1 110px;
+        width: auto;
+        min-width: 0;
+    }
+
+    .sg-nav-end .logo-switches {
+        flex: 0 0 auto;
+        order: 2;
+        gap: 10px;
+    }
+}

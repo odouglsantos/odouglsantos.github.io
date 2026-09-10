@@ -1,0 +1,16 @@
+/* ------------------------------------------------------------------
+   Comentários (giscus) — respiro e largura iguais aos do corpo do post
+   ------------------------------------------------------------------ */
+
+.sg-comments {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+}
+
+/* o iframe do giscus vem com margem própria; aqui ela só atrapalha */
+.sg-comments .giscus,
+.sg-comments .giscus-frame {
+    width: 100%;
+    margin: 0;
+}

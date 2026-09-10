@@ -1,72 +1,182 @@
-<div class="navbar" role="navigation">
-  <nav class="menu" aria-label="Main Navigation">
-    <a href="/" class="logo">
-      {{ partial "svgs/home.svg" (dict "height" 25 "width" 25) . }}
-    </a>
-    <input type="checkbox" id="menu-trigger" class="menu-trigger" />
-    <label for="menu-trigger">
-      <span class="menu-icon">
-        {{ partial "svgs/menu.svg" (dict "height" 25 "width" 25) . }}
-      </span>
-    </label>
+{{- /*
+  Header override (site-level): barra superior no estilo AkitaOnRails —
+  título à esquerda; à direita menu de texto · GitHub · busca · feed · idioma · tema.
+  Baseado no partial do tema (themes/hugo-theme-sigil/layouts/partials/header.html).
+*/ -}}
+{{- $searchPage := "" }}
+{{- range site.RegularPages }}
+  {{- if eq .Layout "search" }}{{ $searchPage = . }}{{ end }}
+{{- end }}
+{{- $gh := "" }}
+{{- range site.Params.socialIcons }}
+  {{- if eq (lower .name) "github" }}{{ $gh = .url }}{{ end }}
+{{- end }}
+{{- $rss := site.Home.OutputFormats.Get "rss" }}
+{{- /* O seletor de idioma aponta para a tradução da página atual quando ela
+       existe; senão, para a mesma seção no outro idioma (de um post em
+       português sem tradução, vai para a lista de posts em inglês); e só
+       então cai na home. */ -}}
+{{- $langAlts := .Translations }}
+{{- if not $langAlts }}{{ with .CurrentSection }}{{ $langAlts = .Translations }}{{ end }}{{ end }}
+{{- if not $langAlts }}{{ $langAlts = site.Home.Translations }}{{ end }}
 
-    <div class="trigger">
-      <ul class="trigger-container">
-        {{ $currentPage := . }}
-        {{ range .Site.Menus.main }}
-          <li>
-            <a 
-            class="menu-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}active{{ end }}"
-            href="{{ .URL }}">
-            {{ .Name }}
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            {{- $label_text := (site.Params.label.text | default site.Title) }}
+            {{- if site.Title }}
+            <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)">
+                {{- if site.Params.label.icon }}
+                {{- $img := resources.Get site.Params.label.icon }}
+                {{- if $img }}
+                    {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "bmp" "gif") -}}
+                    {{- if hugo.IsExtended -}}
+                        {{- $processableFormats = $processableFormats | append "webp" -}}
+                    {{- end -}}
+                    {{- $prod := (hugo.IsProduction | or (eq site.Params.env "production")) }}
+                    {{- if and (in $processableFormats $img.MediaType.SubType) (eq $prod true)}}
+                        {{- if site.Params.label.iconHeight }}
+                            {{- $img = $img.Resize (printf "x%d" site.Params.label.iconHeight) }}
+                        {{ else }}
+                            {{- $img = $img.Resize "x30" }}
+                        {{- end }}
+                    {{- end }}
+                    <img src="{{ $img.Permalink }}" alt="{{ $label_text }}"
+                        width="{{ $img.Width }}"
+                        height="{{- site.Params.label.iconHeight | default "30" -}}">
+                {{- else }}
+                <img src="{{- site.Params.label.icon | absURL -}}" alt="{{ $label_text }}"
+                    width="{{- site.Params.label.iconHeight | default "30" -}}"
+                    height="{{- site.Params.label.iconHeight | default "30" -}}">
+                {{- end -}}
+                {{- else if hasPrefix site.Params.label.iconSVG "<svg" }}
+                    {{ site.Params.label.iconSVG | safeHTML }}
+                {{- end -}}
+                {{- $label_text -}}
             </a>
-            {{ if .HasChildren }}
-              <ul>
-                {{ range .Children }}
-                  <li>
-                    <a
-                    class="menu-link {{ if $currentPage.IsMenuCurrent "main" . }}active{{ end }}"
-                    href="{{ .URL }}">
-                      {{ .Name }}
+            {{- end }}
+        </div>
+
+        <div class="sg-nav-end">
+            {{- $currentPage := . }}
+            <ul id="menu">
+                {{- range site.Menus.main }}
+                {{- $target := site.GetPage .KeyName }}
+                {{- $is_search := and $target (eq $target.Layout "search") }}
+                {{- /* a busca vive na caixa de texto ao lado, não no menu */ -}}
+                {{- if not $is_search }}
+                {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
+                {{- $page_url := $currentPage.Permalink | absLangURL }}
+                <li>
+                    <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
+                        <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
+                            {{- .Pre }}
+                            {{- .Name -}}
+                            {{ .Post -}}
+                        </span>
+                        {{- if (findRE "://" .URL) }}&nbsp;
+                        <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="12" width="12">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14L21 3"></path>
+                        </svg>
+                        {{- end }}
                     </a>
-                  </li>
-                {{ end }}
-              </ul>
-            {{ end }}
-          </li>
-        {{ end }}
-        <li class="menu-separator">
-          <span>|</span>
-        </li>
-        {{/* Language switcher. Links to this page's translation when one exists,
-             otherwise to the other language's home page. */}}
-        {{- $cur := . -}}
-        {{- range .Site.Languages -}}
-          {{- $lang := . -}}
-          {{- if ne $lang.Lang $cur.Site.Language.Lang -}}
-            {{- $url := "" -}}
-            {{- range $cur.Translations -}}
-              {{- if eq .Language.Lang $lang.Lang -}}{{- $url = .RelPermalink -}}{{- end -}}
-            {{- end -}}
-            {{- if not $url -}}
-              {{- range $cur.Site.Home.AllTranslations -}}
-                {{- if eq .Language.Lang $lang.Lang -}}{{- $url = .RelPermalink -}}{{- end -}}
-              {{- end -}}
-            {{- end -}}
-            <li>
-              <a class="menu-link"
-                 href="{{ $url }}"
-                 hreflang="{{ $lang.Lang }}"
-                 lang="{{ $lang.Lang }}"
-                 title="{{ T "switchLanguage" }}">{{ $lang.LanguageName }}</a>
-            </li>
-          {{- end -}}
-        {{- end -}}
-      </ul>
-      <a id="mode" href="#">
-        {{ partial "svgs/sun.svg" (dict "height" 21 "width" 21 "class" "mode-sunny" "title" "LIGHT") . }}
-        {{ partial "svgs/sun.svg" (dict "height" 21 "width" 21 "class" "mode-moon" "title" "DARK") . }}
-      </a>
-    </div>
-  </nav>
-</div>
+                </li>
+                {{- end }}
+                {{- end }}
+            </ul>
+
+            <div class="sg-nav-tools">
+                {{- with $gh }}
+                <a class="sg-nav-icon" href="{{ trim . " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+                    title="GitHub" aria-label="GitHub">
+                    {{- /* marca oficial do GitHub (octicons, MIT): o github-logo do tema é
+                           a versão em contorno, mais fina que o resto da barra */ -}}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="21" height="21"
+                        fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+                </a>
+                {{- end }}
+
+                {{- with $searchPage }}
+                <form class="sg-navsearch" role="search" method="get" action="{{ .RelPermalink }}">
+                    <label class="sr-only" for="sg-navsearch-input">{{ .Title }}</label>
+                    <input id="sg-navsearch-input" type="search" name="q" autocomplete="off" maxlength="64"
+                        placeholder="{{ .Params.navPlaceholder | default (printf "%s…" .Title) }}">
+                    <kbd aria-hidden="true">Ctrl K</kbd>
+                </form>
+                {{- end }}
+
+                {{- with $rss }}
+                <a class="sg-nav-icon" href="{{ .Permalink }}" title="RSS" aria-label="RSS feed"
+                    type="application/rss+xml">
+                    {{- partial "sg-icon.html" (dict "name" "rss" "size" 20) -}}
+                </a>
+                {{- end }}
+            </div>
+
+            <div class="logo-switches">
+                {{- if (not site.Params.disableLangToggle) }}
+                    {{- with $langAlts }}
+                    <ul class="lang-switch" aria-label="Language switcher">
+                        <li>
+                            <span class="is-current" aria-current="true">
+                                {{- if eq site.Language.Lang "en" -}}EN
+                                {{- else if eq site.Language.Lang "ja" -}}日本語
+                                {{- else if eq site.Language.Lang "pt" -}}PT
+                                {{- else if eq site.Language.Lang "pt-br" -}}PT
+                                {{- else -}}中文
+                                {{- end -}}
+                            </span>
+                        </li>
+                        {{- range . -}}
+                        <li>
+                            <a href="{{- .Permalink -}}" title="{{ .Language.Label | default (.Lang | title) }}"
+                                aria-label="{{ .Language.Label | default (.Lang | title) }}">
+                                {{- if eq .Lang "en" -}}EN
+                                {{- else if eq .Lang "ja" -}}日本語
+                                {{- else if eq .Lang "pt" -}}PT
+                                {{- else if eq .Lang "pt-br" -}}PT
+                                {{- else -}}中文
+                                {{- end -}}
+                            </a>
+                        </li>
+                        {{- end}}
+                    </ul>
+                    {{- end }}
+                {{- end }}
+
+                {{- if (not site.Params.disableThemeToggle) }}
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    {{ partial "sg-icon.html" (dict "name" "moon-stars" "size" 22 "id" "moon") }}
+                    {{ partial "sg-icon.html" (dict "name" "sun" "size" 22 "id" "sun") }}
+                </button>
+                {{- end }}
+            </div>
+        </div>
+    </nav>
+</header>
+{{- with $searchPage }}
+<script>
+// Ctrl/Cmd + K (ou "/") foca a busca do topo; Esc devolve o foco à página.
+(function () {
+    var input = document.getElementById("sg-navsearch-input");
+    if (!input) return;
+    document.addEventListener("keydown", function (e) {
+        var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)
+            || document.activeElement.isContentEditable;
+        if ((e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            input.focus();
+            input.select();
+        } else if (e.key === "/" && !typing) {
+            e.preventDefault();
+            input.focus();
+        } else if (e.key === "Escape" && document.activeElement === input) {
+            input.blur();
+        }
+    });
+})();
+</script>
+{{- end }}

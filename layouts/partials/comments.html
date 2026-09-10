@@ -1,0 +1,55 @@
+{{- /* giscus: os comentários vivem no GitHub Discussions deste repositório.
+       O tema entrega este partial vazio de propósito (convenção do PaperMod);
+       ele é chamado por single.html quando o param `comments` é verdadeiro.
+       IDs obtidos pela API GraphQL do GitHub — categoria "Announcements",
+       que é do formato Announcement: só o dono abre discussões novas, o app
+       do giscus continua criando a thread de cada post. */ -}}
+{{- if in site.Params.mainSections .Section }}
+{{- $lang := cond (eq site.Language.Lang "en") "en" "pt" }}
+<section class="sg-comments" aria-label="{{ if eq site.Language.Lang "en" }}Comments{{ else }}Comentários{{ end }}">
+  <div id="giscus-container"></div>
+</section>
+<script>
+(function () {
+    var mount = document.getElementById("giscus-container");
+    if (!mount) return;
+
+    function currentTheme() {
+        return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    }
+
+    var s = document.createElement("script");
+    s.src = "https://giscus.app/client.js";
+    s.async = true;
+    s.crossOrigin = "anonymous";
+    var attrs = {
+        "data-repo": "odouglsantos/odouglsantos.github.io",
+        "data-repo-id": "R_kgDOMC8pgQ",
+        "data-category": "Announcements",
+        "data-category-id": "DIC_kwDOMC8pgc4DFVtG",
+        // uma discussão por URL: as versões pt e /en/ ficam em threads separadas
+        "data-mapping": "pathname",
+        "data-strict": "1",
+        "data-reactions-enabled": "1",
+        "data-emit-metadata": "0",
+        "data-input-position": "top",
+        "data-theme": currentTheme(),
+        "data-lang": {{ $lang }},
+        "data-loading": "lazy"
+    };
+    Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+    mount.appendChild(s);
+
+    // o botão de tema do site troca o data-theme do <html>; o giscus só sabe
+    // disso por postMessage para o iframe
+    new MutationObserver(function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (!frame) return;
+        frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: currentTheme() } } },
+            "https://giscus.app"
+        );
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+{{- end }}

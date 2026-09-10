@@ -1,0 +1,183 @@
+{{- /* Override do site: cópia de themes/hugo-theme-sigil/layouts/index.html com as
+       strings em português. O tema só traz zh/en/ja e cai no chinês para
+       qualquer outro idioma. Ao atualizar o submodule, re-sincronize este
+       arquivo com o original. */ -}}
+{{- define "main" }}
+{{- $contentSite := site }}
+{{- /* ShowDefaultLanguageContent: 非默认语言的列表回退到默认语言内容(界面仍是当前语言) */ -}}
+{{- if and site.Params.ShowDefaultLanguageContent (ne site.Language.Lang hugo.Sites.Default.Language.Lang) -}}
+{{- $contentSite = index hugo.Sites 0 -}}
+{{- end -}}
+{{- $pages := where $contentSite.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
+{{- $paginator := .Paginate $pages }}
+{{- /* homePageSize: 首页列表篇数;不设则用全站 paginate 配置 */ -}}
+{{- with site.Params.homePageSize -}}{{- $paginator = $.Paginate $pages (int .) -}}{{- end -}}
+{{- $offset := mul (sub $paginator.PageNumber 1) $paginator.PagerSize }}
+{{- $socialLabel := "社交链接" -}}
+{{- $readPrefix := "阅读：" -}}
+{{- if eq site.Language.Lang "en" -}}
+  {{- $socialLabel = "Social links" -}}
+  {{- $readPrefix = "Read: " -}}
+{{- else if eq site.Language.Lang "pt" -}}
+  {{- $socialLabel = "Links sociais" -}}
+  {{- $readPrefix = "Ler: " -}}
+{{- else if eq site.Language.Lang "ja" -}}
+  {{- $socialLabel = "ソーシャルリンク" -}}
+  {{- $readPrefix = "読む: " -}}
+{{- end -}}
+
+<div class="sg-home">
+  {{- if eq $paginator.PageNumber 1 }}
+  <section class="sg-hero" aria-labelledby="sg-title">
+    <div class="sg-hero__copy">
+      {{- with site.Params.sgKicker }}
+      <p class="sg-kicker">{{ . }}</p>
+      {{- end }}
+      <h1 id="sg-title">{{ with site.Params.sgHomeTitle }}{{ . }}{{ else }}{{ site.Title }}{{ end }}</h1>
+      {{- with site.Params.homeInfoParams.content }}
+      <p class="sg-hero__intro">{{ . }}</p>
+      {{- end }}
+      {{- with site.Params.socialIcons }}
+      <nav class="sg-hero__social" aria-label="{{ $socialLabel }}">
+        {{ partial "social_icons.html" }}
+      </nav>
+      {{- end }}
+    </div>
+
+    {{- $sgMotto := site.Params.sgMotto -}}
+    <figure class="sg-seal">
+      <div class="sg-seal__frame">
+        {{- with site.Params.sgSealImage }}
+        <img src="{{ . | relURL }}" alt="{{ site.Title }}" width="320" height="320">
+        {{- else }}
+        <span class="sg-seal__glyph" aria-hidden="true">∴</span>
+        {{- end }}
+      </div>
+      {{- if or site.Params.sgReading site.Params.sgPlaying $sgMotto }}
+      <figcaption class="sg-now" data-rotate="true" aria-label="Current reading and playing" aria-live="polite">
+        {{- with site.Params.sgReading }}
+        <span class="sg-now__item sg-now__item--reading">{{ partial "sg-icon.html" (dict "name" "book-open" "size" 14) }}<span>Reading: {{ . }}</span></span>
+        {{- end }}
+        {{- with site.Params.sgPlaying }}
+        <span class="sg-now__item sg-now__item--playing">{{ partial "sg-icon.html" (dict "name" "game-controller" "size" 14) }}<span>Playing: {{ . }}</span></span>
+        {{- end }}
+        {{- with $sgMotto }}
+        <span class="sg-now__item sg-now__item--motto"><span class="sg-now__glyph" aria-hidden="true">∴</span><span>{{ . }}</span></span>
+        {{- end }}
+      </figcaption>
+      {{- end }}
+    </figure>
+  </section>
+  {{- if or site.Params.sgReading site.Params.sgPlaying $sgMotto }}
+  <script>
+  (function () {
+      var strip = document.querySelector(".sg-now");
+      if (!strip) return;
+      var items = Array.from(strip.querySelectorAll(".sg-now__item"));
+      if (items.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      strip.classList.add("sg-now--rotating");
+      var index = 0;
+      items.forEach(function (item, i) { item.classList.toggle("is-active", i === 0); });
+      window.setInterval(function () {
+          items[index].classList.remove("is-active");
+          index = (index + 1) % items.length;
+          items[index].classList.add("is-active");
+      }, 8000);
+  })();
+  </script>
+  {{- end }}
+  {{- end }}
+
+  {{- if gt (len $pages) 0 }}
+  <section class="sg-writing" aria-labelledby="recent-writing">
+    {{- /* ShowTotalWords:计数旁标注列表文章总字数(中文计到万,英日计到 K;纯整型四舍五入) */ -}}
+    {{- $totalWords := 0 }}{{ range $pages }}{{ $totalWords = add $totalWords .WordCount }}{{ end }}
+    {{- $wordsLabel := "" }}
+    {{- if and site.Params.ShowTotalWords (gt $totalWords 0) }}
+      {{- $rounded := div (add $totalWords 500) 1000 }}
+      {{- if eq site.Language.Lang "en" }}
+        {{- if ge $totalWords 1000 }}{{ $wordsLabel = printf "%dK words" $rounded }}{{ else }}{{ $wordsLabel = printf "%d words" $totalWords }}{{ end }}
+      {{- else if eq site.Language.Lang "pt" }}
+        {{- if ge $totalWords 1000 }}{{ $wordsLabel = printf "%dK palavras" $rounded }}{{ else }}{{ $wordsLabel = printf "%d palavras" $totalWords }}{{ end }}
+      {{- else if eq site.Language.Lang "ja" }}
+        {{- if ge $totalWords 1000 }}{{ $wordsLabel = printf "%dK文字" $rounded }}{{ else }}{{ $wordsLabel = printf "%d文字" $totalWords }}{{ end }}
+      {{- else if ge $totalWords 10000 }}
+        {{- if eq (mod $rounded 10) 0 }}{{ $wordsLabel = printf "%d 万字" (div $rounded 10) }}{{ else }}{{ $wordsLabel = printf "%d.%d 万字" (div $rounded 10) (mod $rounded 10) }}{{ end }}
+      {{- else }}
+        {{- $wordsLabel = printf "%d 字" $totalWords }}
+      {{- end }}
+    {{- end }}
+    <header class="sg-section-head">
+      <div>
+        <h2 id="recent-writing">{{ if eq site.Language.Lang "en" }}Updated My Journal{{ else if eq site.Language.Lang "pt" }}Escritos recentes{{ else if eq site.Language.Lang "ja" }}最近の更新{{ else }}最近更新{{ end }}{{ if not (in (slice "en" "pt") site.Language.Lang) }}<span class="sg-section-head__en">Update My Journal</span>{{ end }}</h2>
+        {{- if and site.Params.ShowContentLanguageNote (ne site.Language.Lang hugo.Sites.Default.Language.Lang) }}
+        {{- with i18n "posts_language_note" }}
+        <p class="sg-lang-note">{{ . }}</p>
+        {{- end }}
+        {{- end }}
+      </div>
+      <p class="sg-section-head__count">{{ len $pages }}{{ if eq site.Language.Lang "en" }} posts{{ else if eq site.Language.Lang "pt" }} posts{{ else if eq site.Language.Lang "ja" }} 編{{ else }} 篇文章{{ end }}{{ with $wordsLabel }}<span class="sg-section-head__words">{{ . }}</span>{{ end }}</p>
+    </header>
+
+    <div class="sg-feed">
+      {{- range $index, $page := $paginator.Pages }}
+      {{- $number := add (add $offset $index) 1 }}
+      <article class="sg-entry{{ if and (eq $paginator.PageNumber 1) (eq $index 0) }} is-latest{{ end }}">
+        <a class="sg-entry__link" href="{{ .RelPermalink }}" aria-label="{{ $readPrefix }}{{ .Title }}"></a>
+        <p class="sg-entry__number" aria-hidden="true">{{ printf "%02d" $number }}</p>
+        <time class="sg-entry__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+        <div class="sg-entry__main">
+          <h3>{{ .Title }}</h3>
+            <div class="sg-entry__meta">
+              {{- with .GetTerms "categories" }}
+              {{- range . }}
+              <span class="sg-entry__category">{{ .LinkTitle }}</span>
+              {{- end }}
+              {{- end }}
+              <span class="sg-entry__time">{{ partial "sg-icon.html" (dict "name" "clock" "size" 11) }}{{ .ReadingTime }}{{ if eq site.Language.Lang "en" }} min{{ else if eq site.Language.Lang "pt" }} min{{ else if eq site.Language.Lang "ja" }} 分{{ else }} 分钟{{ end }}</span>
+            </div>
+          </div>
+          <span class="sg-entry__arrow" aria-hidden="true">→</span>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{- if gt $paginator.TotalPages 1 }}
+  {{- /* 方向词一次算好,文字与 aria-label 共用:窄屏下 __word 被 CSS 隐藏,
+         没有标签的话链接在移动端是无名的(Lighthouse link-name 实测) */ -}}
+  {{- $prevWord := "上一页" }}{{ $nextWord := "下一页" }}
+  {{- if eq site.Language.Lang "en" }}{{ $prevWord = "Prev" }}{{ $nextWord = "Next" }}
+  {{- else if eq site.Language.Lang "pt" }}{{ $prevWord = "Anterior" }}{{ $nextWord = "Próxima" }}
+  {{- else if eq site.Language.Lang "ja" }}{{ $prevWord = "前へ" }}{{ $nextWord = "次へ" }}{{ end }}
+  <nav class="sg-pagination" aria-label="{{ if eq site.Language.Lang "en" }}Pagination{{ else if eq site.Language.Lang "pt" }}Paginação{{ else if eq site.Language.Lang "ja" }}ページ送り{{ else }}文章分页{{ end }}">
+    <span class="sg-pagination__side">
+      {{- if $paginator.HasPrev }}
+      <a href="{{ $paginator.Prev.URL }}" aria-label="{{ $prevWord }}"><span aria-hidden="true">←</span> <span class="sg-pagination__word">{{ $prevWord }}</span></a>
+      {{- end }}
+    </span>
+    <ol class="sg-pagination__pages">
+      {{- $scratch := newScratch }}
+      {{- $scratch.Set "prev" 0 }}
+      {{- range $paginator.Pagers }}
+      {{- $near := and (ge .PageNumber (sub $paginator.PageNumber 2)) (le .PageNumber (add $paginator.PageNumber 2)) }}
+      {{- if or (eq .PageNumber 1) (eq .PageNumber $paginator.TotalPages) $near }}
+      {{- if gt (sub .PageNumber ($scratch.Get "prev")) 1 }}
+      <li class="sg-pagination__gap" aria-hidden="true">…</li>
+      {{- end }}
+      {{- $scratch.Set "prev" .PageNumber }}
+      <li><a href="{{ .URL }}"{{ if eq .PageNumber $paginator.PageNumber }} class="is-current" aria-current="page"{{ end }}>{{ .PageNumber }}</a></li>
+      {{- end }}
+      {{- end }}
+    </ol>
+    <span class="sg-pagination__side sg-pagination__side--right">
+      {{- if $paginator.HasNext }}
+      <a href="{{ $paginator.Next.URL }}" aria-label="{{ $nextWord }}"><span class="sg-pagination__word">{{ $nextWord }}</span> <span aria-hidden="true">→</span></a>
+      {{- end }}
+    </span>
+  </nav>
+  {{- end }}
+</div>
+{{- end }}
