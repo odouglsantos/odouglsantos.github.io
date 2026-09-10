@@ -86,6 +86,21 @@ enableEmoji = true
   # A busca vive na caixa do topo (Ctrl+K); a página /search/ continua existindo.
   sgSealImage = "avatar.webp" # arquivo em static/
 
+  # Busca (Fuse.js, client-side sobre /index.json).
+  # O padrão do tema é threshold 0.4 sobre o conteúdo inteiro: com textos
+  # longos, quase toda busca casa com todos os posts ("avro" trazia os três).
+  # threshold 0 = o termo tem de aparecer literalmente; ignoreLocation faz
+  # valer em qualquer ponto do texto, não só no começo.
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    ignoreLocation = true
+    threshold = 0.0
+    distance = 100
+    minMatchCharLength = 3
+    limit = 12
+    keys = ["title", "summary", "content"]
+
   # Post chrome (params herdados do PaperMod)
   ShowBreadCrumbs = true
   ShowReadingTime = true
