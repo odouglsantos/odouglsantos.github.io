@@ -1,12 +1,15 @@
 title = "Douglas Santos"
 baseURL = 'https://odouglsantos.github.io'
-languageCode = 'en-us'
 theme = "hugo-blog-awesome"
+
+# Multilingual: Portuguese is the default and stays at the site root, so every
+# URL published before this change keeps working. English is served under /en/.
+defaultContentLanguage = 'pt-br'
+defaultContentLanguageInSubdir = false
 
 # To enable Google Analytics 4 (gtag.js) provide G-MEASUREMENT_ID below.
 # To disable  Google Analytics, simply leave the field empty or remove the next line
 googleAnalytics = '' # G-MEASUREMENT_ID
-
 
 # Enable emojis globally
 enableEmoji = true
@@ -18,43 +21,67 @@ enableEmoji = true
   [markup.goldmark.renderer]
     unsafe = true
 
+[languages]
 
+  [languages.pt-br]
+    languageName = 'Português'
+    languageCode = 'pt-BR'
+    weight = 1
+    title = "Douglas Santos"
 
-[menu]
-  [[menu.main]] 
-    # The page reference (pageRef) is useful for menu highlighting
-    # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
-    pageRef="/"
-    name = 'Home'
-    url = '/'
-    weight = 10
-  # [[menu.main]]
-  #   pageRef="posts"
-  #   name = 'Posts'
-  #   url = '/posts/'
-  #   weight = 20
-  # [[menu.main]]
-  #   pageRef="about"
-  #   name = 'About'
-  #   url = '/about/'
-  #   weight = 30
-  [[menu.main]]
-    pageRef="posts"
-    name = 'Posts'
-    url = '/posts/'
-    weight = 20
+    [languages.pt-br.params]
+      sitename = "Douglas Santos"
+      description = "Bem-vindo ao meu blog pessoal de tecnologia"
+
+    [languages.pt-br.params.author]
+      avatar = "avatar.webp"
+      intro = "Douglas Santos (aka Batman)"
+      name = "Douglas Santos"
+      description = "Engenheiro de software, gamer e aspirante a criptógrafo"
+
+    [[languages.pt-br.menu.main]]
+      pageRef = "/"
+      name = 'Início'
+      url = '/'
+      weight = 10
+
+    [[languages.pt-br.menu.main]]
+      pageRef = "posts"
+      name = 'Posts'
+      url = '/posts/'
+      weight = 20
+
+  [languages.en]
+    languageName = 'English'
+    languageCode = 'en-US'
+    weight = 2
+    title = "Douglas Santos"
+
+    [languages.en.params]
+      sitename = "Douglas Santos"
+      description = "Welcome to my personal tech blog"
+
+    [languages.en.params.author]
+      avatar = "avatar.webp"
+      intro = "Douglas Santos (aka Batman)"
+      name = "Douglas Santos"
+      description = "Software engineer, gamer and cryptography aspirant"
+
+    [[languages.en.menu.main]]
+      pageRef = "/"
+      name = 'Home'
+      url = '/en/'
+      weight = 10
+
+    [[languages.en.menu.main]]
+      pageRef = "posts"
+      name = 'Posts'
+      url = '/en/posts/'
+      weight = 20
 
 [params]
-  sitename = "Douglas Santos"
   defaultColor = "dark" # set default color mode: dark or light
-  description = "Welcome to my personal tech blog"
 
-[params.author]
-  avatar = "avatar.webp" # put the file in assets folder; also ensure that image has same height and width
-  # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
-  intro = "Douglas Santos (aka Batman)"
-  name = "Douglas Santos"
-  description = "Software engineer, gamer and cryptography aspirant"
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/odouglsantos"
