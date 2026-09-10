@@ -34,7 +34,7 @@
         "data-emit-metadata": "0",
         "data-input-position": "top",
         "data-theme": currentTheme(),
-        "data-lang": {{ $lang | jsonify }},
+        "data-lang": {{ $lang }},
         "data-loading": "lazy"
     };
     Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
